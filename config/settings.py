@@ -8,6 +8,11 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 import os
 from pathlib import Path
+import environ
+
+env = environ.Env()
+environ.Env.read_env()
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -17,12 +22,15 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY')
+# SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY')
+SECRET_KEY = env.str('DJANGO_SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = str(os.environ.get('DEBUG'))
+# DEBUG = str(os.environ.get('DEBUG'))
+DEBUG = env.bool('DEBUG')
 
-ALLOWED_HOSTS = os.environ.get('DJANGO_ALLOWED_HOST')
+# ALLOWED_HOSTS = os.environ.get('DJANGO_ALLOWED_HOST')
+ALLOWED_HOSTS = env.str('DJANGO_ALLOWED_HOST')
 
 
 # Application definition
@@ -81,11 +89,18 @@ WSGI_APPLICATION = 'config.wsgi.application'
 # }
 
 
-POSTGRES_DB = os.environ.get("POSTGRES_DB") #database name
-POSTGRES_PASSWORD = os.environ.get("POSTGRES_PASSWORD") # database user password
-POSTGRES_USER = os.environ.get("POSTGRES_USER") # database username
-POSTGRES_HOST = os.environ.get("POSTGRES_HOST") # database host
-POSTGRES_PORT = os.environ.get("POSTGRES_PORT") # database port
+# POSTGRES_DB = os.environ.get("POSTGRES_DB") #database name
+# POSTGRES_PASSWORD = os.environ.get("POSTGRES_PASSWORD") # database user password
+# POSTGRES_USER = os.environ.get("POSTGRES_USER") # database username
+# POSTGRES_HOST = os.environ.get("POSTGRES_HOST") # database host
+# POSTGRES_PORT = os.environ.get("POSTGRES_PORT") # database port
+
+POSTGRES_DB = env.str("POSTGRES_DB") #database name
+POSTGRES_PASSWORD = env.str("POSTGRES_PASSWORD") # database user password
+POSTGRES_USER = env.str("POSTGRES_USER") # database username
+POSTGRES_HOST = env.str("POSTGRES_HOST") # database host
+POSTGRES_PORT = env.str("POSTGRES_PORT") # database port
+
 
 POSTGRES_READY = (
     POSTGRES_DB is not None
@@ -156,8 +171,11 @@ MEDIA_ROOT = str(BASE_DIR.joinpath('media'))
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
-TOKEN = os.environ.get('BOT_TOKEN')
+# TOKEN = os.environ.get('BOT_TOKEN')
+TOKEN = env.str('BOT_TOKEN')
 
 PROXY_URL = 'https://api.telegram.org/bot'
 
-CHANNEL_ID = os.environ.get('CHANNEL_ID')
+# CHANNEL_ID = os.environ.get('CHANNEL_ID')
+CHANNEL_ID = env.str('CHANNEL_ID')
+
