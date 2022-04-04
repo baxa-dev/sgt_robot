@@ -10,27 +10,30 @@ import os
 from pathlib import Path
 import environ
 
-env = environ.Env()
-environ.Env.read_env()
+
+env = environ.Env(DEBUG=(bool, False))
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
-BASE_DIR = Path(__file__).resolve().parent.parent
+# BASE_DIR = Path(__file__).resolve().parent.parent
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
+# Take environment variables from .env file
+environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
 # SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY')
-SECRET_KEY = env.str('DJANGO_SECRET_KEY')
+SECRET_KEY = env('DJANGO_SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 # DEBUG = str(os.environ.get('DEBUG'))
-DEBUG = env.bool('DEBUG')
+DEBUG = env('DEBUG')
 
 # ALLOWED_HOSTS = os.environ.get('DJANGO_ALLOWED_HOST')
-ALLOWED_HOSTS = env.str('DJANGO_ALLOWED_HOST')
+ALLOWED_HOSTS = env('DJANGO_ALLOWED_HOST')
 
 
 # Application definition
@@ -81,6 +84,13 @@ WSGI_APPLICATION = 'config.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
+POSTGRES_DB = env("POSTGRES_DB") #database name
+POSTGRES_PASSWORD = env("POSTGRES_PASSWORD") # database user password
+POSTGRES_USER = env("POSTGRES_USER") # database username
+POSTGRES_HOST = env("POSTGRES_HOST") # database host
+POSTGRES_PORT = env("POSTGRES_PORT") # database port
+
+
 # DATABASES = {
 #     'default': {
 #         'ENGINE': 'django.db.backends.sqlite3',
@@ -95,32 +105,17 @@ WSGI_APPLICATION = 'config.wsgi.application'
 # POSTGRES_HOST = os.environ.get("POSTGRES_HOST") # database host
 # POSTGRES_PORT = os.environ.get("POSTGRES_PORT") # database port
 
-POSTGRES_DB = env.str("POSTGRES_DB") #database name
-POSTGRES_PASSWORD = env.str("POSTGRES_PASSWORD") # database user password
-POSTGRES_USER = env.str("POSTGRES_USER") # database username
-POSTGRES_HOST = env.str("POSTGRES_HOST") # database host
-POSTGRES_PORT = env.str("POSTGRES_PORT") # database port
 
-
-POSTGRES_READY = (
-    POSTGRES_DB is not None
-    and POSTGRES_PASSWORD is not None
-    and POSTGRES_USER is not None
-    and POSTGRES_HOST is not None
-    and POSTGRES_PORT is not None
-)
-
-if POSTGRES_READY:
-    DATABASES = {
-        "default": {
-            "ENGINE": "django.db.backends.postgresql",
-            "NAME": POSTGRES_DB,
-            "USER": POSTGRES_USER,
-            "PASSWORD": POSTGRES_PASSWORD,
-            "HOST": POSTGRES_HOST,
-            "PORT": POSTGRES_PORT,
-        }
+DATABASES = {
+    "default": {
+        "ENGINE": "django.db.backends.postgresql_psycopg2",
+        "NAME": POSTGRES_DB,
+        "USER": POSTGRES_USER,
+        "PASSWORD": POSTGRES_PASSWORD,
+        "HOST": POSTGRES_HOST,
+        "PORT": POSTGRES_PORT,
     }
+}
 
 
 # Password validation
@@ -160,10 +155,12 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 
 STATIC_URL = '/static/'
-STATIC_ROOT = str(BASE_DIR.joinpath('static'))
+STATIC_ROOT = os.path.join(BASE_DIR, 'static/')
+
 
 MEDIA_URL = '/media/'
-MEDIA_ROOT = str(BASE_DIR.joinpath('media'))
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
+
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
@@ -172,10 +169,10 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
 # TOKEN = os.environ.get('BOT_TOKEN')
-TOKEN = env.str('BOT_TOKEN')
+TOKEN = env('BOT_TOKEN')
 
 PROXY_URL = 'https://api.telegram.org/bot'
 
 # CHANNEL_ID = os.environ.get('CHANNEL_ID')
-CHANNEL_ID = env.str('CHANNEL_ID')
+CHANNEL_ID = env('CHANNEL_ID')
 
