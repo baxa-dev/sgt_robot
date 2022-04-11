@@ -7,7 +7,9 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 import os
+import sys
 from pathlib import Path
+import dj_database_url
 import environ
 
 
@@ -81,13 +83,6 @@ WSGI_APPLICATION = 'config.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
-# POSTGRES_DB = env("POSTGRES_DB") #database name
-# POSTGRES_PASSWORD = env("POSTGRES_PASSWORD") # database user password
-# POSTGRES_USER = env("POSTGRES_USER") # database username
-# POSTGRES_HOST = env("POSTGRES_HOST") # database host
-# POSTGRES_PORT = env("POSTGRES_PORT") # database port
-
-
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
@@ -96,11 +91,11 @@ DATABASES = {
 }
 
 
-# POSTGRES_DB = os.environ.get("POSTGRES_DB") #database name
-# POSTGRES_PASSWORD = os.environ.get("POSTGRES_PASSWORD") # database user password
-# POSTGRES_USER = os.environ.get("POSTGRES_USER") # database username
-# POSTGRES_HOST = os.environ.get("POSTGRES_HOST") # database host
-# POSTGRES_PORT = os.environ.get("POSTGRES_PORT") # database port
+# POSTGRES_DB = env("POSTGRES_DB") #database name
+# POSTGRES_PASSWORD = env("POSTGRES_PASSWORD") # database user password
+# POSTGRES_USER = env("POSTGRES_USER") # database username
+# POSTGRES_HOST = env("POSTGRES_HOST") # database host
+# POSTGRES_PORT = env("POSTGRES_PORT") # database port
 
 
 # DATABASES = {
@@ -152,7 +147,12 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 
 STATIC_URL = '/static/'
-STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+# STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'static')
+]
 
 
 MEDIA_URL = '/media/'
