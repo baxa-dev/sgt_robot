@@ -1,4 +1,5 @@
 import json
+import os
 # from django.conf import settings
 from asgiref.sync import sync_to_async
 from config import settings
@@ -8,7 +9,7 @@ from config import settings
 class Data:
     def __init__(self, user_id, path):
         self.user_id = user_id
-        self.filepath = settings.BASE_DIR/'bot_client/data.json'
+        self.filepath = os.path.join(settings.BASE_DIR, 'bot_client/data.json')
         self.path = path
 
     @property
