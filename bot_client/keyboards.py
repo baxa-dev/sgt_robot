@@ -228,12 +228,12 @@ async def get_mining_brands(callback, state):
         data['get_mining_brands'] = brand_buttons
 
 
-async def get_mining_products(callback, brand_name, state):
+async def get_mining_products(callback, brand_name, pci_number, state):
     chat_id = callback.message.chat.id
     current_state = await state.get_state()
     text = "Выберите :"
     product_buttons = InlineKeyboardMarkup(row_width=2)
-    products_list = await utils.get_mining_products(brand_name=brand_name, current_state=current_state)
+    products_list = await utils.get_mining_products(pci_number=pci_number, brand_name=brand_name, current_state=current_state)
 
     items_amount = len(products_list)
 

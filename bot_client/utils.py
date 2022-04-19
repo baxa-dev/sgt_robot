@@ -376,10 +376,10 @@ def get_contacts():
 @sync_to_async
 def get_slot_numbers():
     try:
-        numbers = []
+        numbers = set()
         slots = Motherboard.objects.all().order_by('pci_slots')
         for slot in slots:
-            numbers.append(slot.pci_slots)
+            numbers.add(slot.pci_slots)
 
         return numbers
     except ObjectDoesNotExist:
@@ -438,7 +438,7 @@ def get_mining_brands(callback, current_state):
 
 
 @sync_to_async
-def get_mining_products(brand_name, current_state):
+def get_mining_products(pci_number, brand_name, current_state):
     try:
         products_list = []
         obj = ""
@@ -462,6 +462,7 @@ def get_mining_products(brand_name, current_state):
                 products_list.append(brand_object.name)
         else:
             obj = obj.filter(brand__mining_brand=brand_name)
+            obj = obj.filter(pci_slots=pci_number)
             for brand_object in obj:
                 products_list.append(brand_object.name)
         return products_list

@@ -108,19 +108,23 @@ async def choose_motherboard(callback: types.CallbackQuery, state: FSMContext):
     chat_id = callback.message.chat.id
     current_state = await state.get_state()
     brands_list = await utils.get_mining_brands(callback=callback, current_state=current_state)
-    products_list = await utils.get_mining_products(brand_name="", current_state=current_state)
+    products_list = await utils.get_mining_products(pci_number="", brand_name="", current_state=current_state)
     print("This is choosing motherboard state")
     if callback.data == "choose_motherboard":
         await callback.message.delete()
         await keyboards.pci_numbers(callback=callback, state=state)
         await callback.answer()
     elif callback.data.isdigit():
+        async with state.proxy() as data:
+            data['pci_number'] = callback.data
         await callback.message.delete()
         await keyboards.get_mining_brands(callback=callback, state=state)
         await callback.answer()
     elif callback.data in brands_list:
         await callback.message.delete()
-        await keyboards.get_mining_products(callback=callback, brand_name=callback.data, state=state)
+        async with state.proxy() as data:
+            await keyboards.get_mining_products(callback=callback, brand_name=callback.data, pci_number=data['pci_number'], state=state)
+        # await keyboards.get_mining_products(callback=callback, brand_name=callback.data, pci_number=data['pci_number'], state=state)
         await callback.answer()
     elif callback.data in products_list:
         await callback.message.delete()

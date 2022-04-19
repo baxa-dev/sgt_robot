@@ -50,7 +50,7 @@ class Brand(models.Model):
     brand = models.CharField(verbose_name="Бренд", max_length=64)
 
     def __str__(self):
-        return f"{self.brand} - {self.category}"
+        return f"{self.brand} - {self.sub_category} - {self.category}"
 
     class Meta:
         verbose_name = "Бренд"
