@@ -132,3 +132,5 @@ dmypy.json
 .idea/
 bot_env/
 images/
+media/
+static/
