@@ -164,7 +164,7 @@ async def choose_cpu(callback: types.CallbackQuery, state: FSMContext):
     chat_id = callback.message.chat.id
     current_state = await state.get_state()
     brands_list = await utils.get_mining_brands(callback=callback, current_state=current_state)
-    products_list = await utils.get_mining_products(brand_name="", current_state=current_state)
+    products_list = await utils.get_mining_products(pci_number="", brand_name="", current_state=current_state)
     if callback.data == "choose_cpu":
         await callback.message.delete()
         await keyboards.get_mining_brands(callback=callback, state=state)
@@ -208,7 +208,7 @@ async def choose_gpu(callback: types.CallbackQuery, state: FSMContext):
     chat_id = callback.message.chat.id
     current_state = await state.get_state()
     brands_list = await utils.get_mining_brands(callback=callback, current_state=current_state)
-    products_list = await utils.get_mining_products(brand_name="", current_state=current_state)
+    products_list = await utils.get_mining_products(pci_number="", brand_name="", current_state=current_state)
     if callback.data == "choose_gpu":
         await callback.message.delete()
         await keyboards.get_mining_brands(callback=callback, state=state)
@@ -252,7 +252,7 @@ async def choose_ssd(callback: types.CallbackQuery, state: FSMContext):
     chat_id = callback.message.chat.id
     current_state = await state.get_state()
     brands_list = await utils.get_mining_brands(callback=callback, current_state=current_state)
-    products_list = await utils.get_mining_products(brand_name="", current_state=current_state)
+    products_list = await utils.get_mining_products(pci_number="", brand_name="", current_state=current_state)
     if callback.data == "choose_ssd":
         await callback.message.delete()
         await keyboards.get_mining_brands(callback=callback, state=state)
@@ -296,7 +296,7 @@ async def choose_ram(callback: types.CallbackQuery, state: FSMContext):
     chat_id = callback.message.chat.id
     current_state = await state.get_state()
     brands_list = await utils.get_mining_brands(callback=callback, current_state=current_state)
-    products_list = await utils.get_mining_products(brand_name="", current_state=current_state)
+    products_list = await utils.get_mining_products(pci_number="", brand_name="", current_state=current_state)
     if callback.data == "choose_ram":
         await callback.message.delete()
         await keyboards.get_mining_brands(callback=callback, state=state)
@@ -340,7 +340,7 @@ async def choose_cooler(callback: types.CallbackQuery, state: FSMContext):
     chat_id = callback.message.chat.id
     current_state = await state.get_state()
     brands_list = await utils.get_mining_brands(callback=callback, current_state=current_state)
-    products_list = await utils.get_mining_products(brand_name="", current_state=current_state)
+    products_list = await utils.get_mining_products(pci_number="", brand_name="", current_state=current_state)
     if callback.data == "choose_cooler":
         await callback.message.delete()
         await keyboards.get_mining_brands(callback=callback, state=state)
@@ -384,7 +384,7 @@ async def choose_power_unit(callback: types.CallbackQuery, state: FSMContext):
     chat_id = callback.message.chat.id
     current_state = await state.get_state()
     brands_list = await utils.get_mining_brands(callback=callback, current_state=current_state)
-    products_list = await utils.get_mining_products(brand_name="", current_state=current_state)
+    products_list = await utils.get_mining_products(pci_number="", brand_name="", current_state=current_state)
     if callback.data == "choose_power_unit":
         await callback.message.delete()
         await keyboards.get_mining_brands(callback=callback, state=state)
