@@ -444,8 +444,25 @@ def get_mining_products(pci_number, brand_name, current_state):
         obj = ""
         if current_state == "Build_Mining:motherboard":
             obj = Motherboard.objects.all()
+ #           if brand_name == "":
+ #               for brand_object in obj:
+ #                   products_list.append(brand_object.name)
+ #           else:
+ #               obj = obj.filter(brand__mining_brand=brand_name)
+ #               obj = obj.filter(pci_slots=pci_number)
+ #               for brand_object in obj:
+ #                   products_list.append(brand_object.name)
         elif current_state == "Build_Mining:cpu":
             obj = CPU.objects.all()
+#            if brand_name == "":
+#                for brand_object in obj:
+#                    products_list.append(brand_object.name)
+#            else:
+#                obj = obj.filter(socket_type__mining_brand=brand_name)
+#                obj = obj.filter(brand__mining_brand=brand_name)
+#                obj = obj.filter(pci_slots=pci_number)
+#                for brand_object in obj:
+#                    products_list.append(brand_object.name)
         elif current_state == "Build_Mining:gpu":
             obj = GPU.objects.all()
         elif current_state == "Build_Mining:ssd":
@@ -462,7 +479,8 @@ def get_mining_products(pci_number, brand_name, current_state):
                 products_list.append(brand_object.name)
         else:
             obj = obj.filter(brand__mining_brand=brand_name)
-            obj = obj.filter(pci_slots=pci_number)
+            if current_state == "Build_Mining:motherboard":
+                obj = obj.filter(pci_slots=pci_number)
             for brand_object in obj:
                 products_list.append(brand_object.name)
         return products_list

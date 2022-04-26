@@ -124,7 +124,6 @@ async def choose_motherboard(callback: types.CallbackQuery, state: FSMContext):
         await callback.message.delete()
         async with state.proxy() as data:
             await keyboards.get_mining_products(callback=callback, brand_name=callback.data, pci_number=data['pci_number'], state=state)
-        # await keyboards.get_mining_products(callback=callback, brand_name=callback.data, pci_number=data['pci_number'], state=state)
         await callback.answer()
     elif callback.data in products_list:
         await callback.message.delete()
@@ -171,7 +170,8 @@ async def choose_cpu(callback: types.CallbackQuery, state: FSMContext):
         await callback.answer()
     elif callback.data in brands_list:
         await callback.message.delete()
-        await keyboards.get_mining_products(callback=callback, brand_name=callback.data, state=state)
+        async with state.proxy() as data:
+            await keyboards.get_mining_products(callback=callback, brand_name=callback.data, pci_number=data['pci_number'], state=state)
         await callback.answer()
     elif callback.data in products_list:
         await callback.message.delete()
@@ -215,7 +215,8 @@ async def choose_gpu(callback: types.CallbackQuery, state: FSMContext):
         await callback.answer()
     elif callback.data in brands_list:
         await callback.message.delete()
-        await keyboards.get_mining_products(callback=callback, brand_name=callback.data, state=state)
+        async with state.proxy() as data:
+            await keyboards.get_mining_products(callback=callback, brand_name=callback.data, pci_number=data['pci_number'], state=state)
         await callback.answer()
     elif callback.data in products_list:
         await callback.message.delete()
@@ -259,7 +260,8 @@ async def choose_ssd(callback: types.CallbackQuery, state: FSMContext):
         await callback.answer()
     elif callback.data in brands_list:
         await callback.message.delete()
-        await keyboards.get_mining_products(callback=callback, brand_name=callback.data, state=state)
+        async with state.proxy() as data:
+            await keyboards.get_mining_products(callback=callback, brand_name=callback.data, pci_number=data['pci_number'], state=state)
         await callback.answer()
     elif callback.data in products_list:
         await callback.message.delete()
@@ -303,7 +305,8 @@ async def choose_ram(callback: types.CallbackQuery, state: FSMContext):
         await callback.answer()
     elif callback.data in brands_list:
         await callback.message.delete()
-        await keyboards.get_mining_products(callback=callback, brand_name=callback.data, state=state)
+        async with state.proxy() as data:
+            await keyboards.get_mining_products(callback=callback, brand_name=callback.data, pci_number=data['pci_number'], state=state)
         await callback.answer()
     elif callback.data in products_list:
         await callback.message.delete()
@@ -347,7 +350,8 @@ async def choose_cooler(callback: types.CallbackQuery, state: FSMContext):
         await callback.answer()
     elif callback.data in brands_list:
         await callback.message.delete()
-        await keyboards.get_mining_products(callback=callback, brand_name=callback.data, state=state)
+        async with state.proxy() as data:
+            await keyboards.get_mining_products(callback=callback, brand_name=callback.data, pci_number=data['pci_number'], state=state)
         await callback.answer()
     elif callback.data in products_list:
         await callback.message.delete()
@@ -391,7 +395,8 @@ async def choose_power_unit(callback: types.CallbackQuery, state: FSMContext):
         await callback.answer()
     elif callback.data in brands_list:
         await callback.message.delete()
-        await keyboards.get_mining_products(callback=callback, brand_name=callback.data, state=state)
+        async with state.proxy() as data:
+            await keyboards.get_mining_products(callback=callback, brand_name=callback.data, pci_number=data['pci_number'], state=state)
         await callback.answer()
     elif callback.data in products_list:
         await callback.message.delete()
