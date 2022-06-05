@@ -81,10 +81,11 @@ def get_all_brands():
 
 
 @sync_to_async
-def get_need_subcategory_brands(callback):
+def get_need_subcategory_brands(category, sub_category):
     try:
         subcategory_brands = []
-        obj = Brand.objects.filter(sub_category__sub_category=callback)
+        obj = Brand.objects.filter(category__category=category)
+        obj = obj.filter(sub_category__sub_category=sub_category)
         for brand_object in obj:
             subcategory_brands.append(brand_object.brand)
         return subcategory_brands
@@ -149,10 +150,15 @@ def get_product_details(product_name):
 
 
 @sync_to_async
-def get_need_brand_products(callback):
+def get_need_brand_products(category, sub_category, brand_name):
     try:
         brand_products = []
-        obj = Product.objects.filter(brand__brand=callback)
+        obj = Product.objects.filter(category__category=category)
+        if sub_category == "":
+            pass
+        else:
+            obj = obj.filter(sub_category__sub_category=sub_category)
+        obj = obj.filter(brand__brand=brand_name)
         for product_object in obj:
             brand_products.append(product_object.name)
         return brand_products
@@ -218,9 +224,9 @@ def update_cart_product(box, user_id, product_name, quantity, total_sum):
 
 # TRANSACTIONS
 # with transaction.atomic():
-        #     obj.product_quantity = quantity
-        #     obj.total_sum = total_sum
-        #     obj.save()
+#     obj.product_quantity = quantity
+#     obj.total_sum = total_sum
+#     obj.save()
 
 
 @sync_to_async
@@ -400,8 +406,16 @@ def get_mining_brands(callback, current_state):
                 obj = obj.filter(pci_slots=int(callback.data))
         elif current_state == "Build_Mining:cpu":
             motherboard = Mining_OrderItem.objects.filter(order_id=order_id).first()
+            cpu = CPU.objects.all()
             socket_type = motherboard.socket_type
-            obj = CPU.objects.filter(socket_type__socket_type=socket_type)
+            for item in cpu:
+                mbs = item.socket_type.all()
+                for mb in mbs:
+                    socket = mb.socket_type
+                    if socket == socket_type:
+                        obj = item
+                        brands_list.add(obj.brand.mining_brand)
+            obj = []
         elif current_state == "Build_Mining:gpu":
             motherboard = Mining_OrderItem.objects.filter(order_id=order_id).first()
             pci_express = motherboard.pci_express.replace(" ", "")
@@ -411,13 +425,10 @@ def get_mining_brands(callback, current_state):
                 pci = item.pci_express.all()
                 for ver in pci:
                     versions = list(ver.pci_express)
-                    # if versions in pci_express:
-                    if (True for i in versions if i in pci_express):
-                        print("version")
+                    if [True for i in versions if i in pci_express]:
                         obj = item
                 brands_list.add(obj.brand.mining_brand)
             obj = []
-
         elif current_state == "Build_Mining:ssd":
             obj = SSD.objects.all()
         elif current_state == "Build_Mining:ram":
@@ -430,59 +441,110 @@ def get_mining_brands(callback, current_state):
             obj = Cooler.objects.filter(socket_type__socket_type=socket_type)
         elif current_state == "Build_Mining:power_unit":
             obj = PowerUnit.objects.all()
+
         for brand_object in obj:
             brands_list.add(brand_object.brand.mining_brand)
+
         return brands_list
     except ObjectDoesNotExist:
         return None
 
 
 @sync_to_async
-def get_mining_products(pci_number, brand_name, current_state):
+def get_mining_products(callback, pci_number, brand_name, current_state):
     try:
         products_list = []
-        obj = ""
+        chat_id = callback.message.chat.id
+        obj = []
+        order = Order.objects.filter(client__user_id=chat_id).get(complete=False)
+        order_id = order.pk
+        motherboard = Mining_OrderItem.objects.filter(order_id=order_id).first()
         if current_state == "Build_Mining:motherboard":
             obj = Motherboard.objects.all()
- #           if brand_name == "":
- #               for brand_object in obj:
- #                   products_list.append(brand_object.name)
- #           else:
- #               obj = obj.filter(brand__mining_brand=brand_name)
- #               obj = obj.filter(pci_slots=pci_number)
- #               for brand_object in obj:
- #                   products_list.append(brand_object.name)
+            if brand_name == "":
+                for item in obj:
+                    products_list.append(item.name)
+            else:
+                obj = obj.filter(pci_slots=pci_number)
+                obj = obj.filter(brand__mining_brand=brand_name)
+                for item in obj:
+                    products_list.append(item.name)
         elif current_state == "Build_Mining:cpu":
             obj = CPU.objects.all()
-#            if brand_name == "":
-#                for brand_object in obj:
-#                    products_list.append(brand_object.name)
-#            else:
-#                obj = obj.filter(socket_type__mining_brand=brand_name)
-#                obj = obj.filter(brand__mining_brand=brand_name)
-#                obj = obj.filter(pci_slots=pci_number)
-#                for brand_object in obj:
-#                    products_list.append(brand_object.name)
+            motherboard = motherboard.product_name
+            if brand_name == "":
+                for item in obj:
+                    products_list.append(item.name)
+            else:
+                cpus = obj.filter(brand__mining_brand=brand_name)
+                for item in cpus:
+                    mbs = item.socket_type.all()
+                    for mb in mbs:
+                        if mb.name == motherboard:
+                            products_list.append(item.name)
+                            break
+
         elif current_state == "Build_Mining:gpu":
             obj = GPU.objects.all()
+            motherboard = motherboard.product_name
+            if brand_name == "":
+                for item in obj:
+                    products_list.append(item.name)
+            else:
+                gpus = obj.filter(brand__mining_brand=brand_name)
+                for item in gpus:
+                    mbs = item.pci_express.all()
+                    for mb in mbs:
+                        if mb.name == motherboard:
+                            products_list.append(item.name)
+                            break
         elif current_state == "Build_Mining:ssd":
             obj = SSD.objects.all()
+            if brand_name == "":
+                for item in obj:
+                    products_list.append(item.name)
+            else:
+                ssds = obj.filter(brand__mining_brand=brand_name)
+                for item in ssds:
+                    products_list.append(item.name)
         elif current_state == "Build_Mining:ram":
             obj = RAM.objects.all()
+            motherboard = motherboard.product_name
+            if brand_name == "":
+                for item in obj:
+                    products_list.append(item.name)
+            else:
+                rams = obj.filter(brand__mining_brand=brand_name)
+                for item in rams:
+                    mbs = item.ram_type.all()
+                    for mb in mbs:
+                        if mb.name == motherboard:
+                            products_list.append(item.name)
+                            break
         elif current_state == "Build_Mining:cooler":
             obj = Cooler.objects.all()
+            motherboard = motherboard.product_name
+            if brand_name == "":
+                for item in obj:
+                    products_list.append(item.name)
+            else:
+                coolers = obj.filter(brand__mining_brand=brand_name)
+                for item in coolers:
+                    mbs = item.socket_type.all()
+                    for mb in mbs:
+                        if mb.name == motherboard:
+                            products_list.append(item.name)
+                            break
         elif current_state == "Build_Mining:power_unit":
             obj = PowerUnit.objects.all()
+            if brand_name == "":
+                for item in obj:
+                    products_list.append(item.name)
+            else:
+                power_units = obj.filter(brand__mining_brand=brand_name)
+                for item in power_units:
+                    products_list.append(item.name)
 
-        if brand_name == "":
-            for brand_object in obj:
-                products_list.append(brand_object.name)
-        else:
-            obj = obj.filter(brand__mining_brand=brand_name)
-            if current_state == "Build_Mining:motherboard":
-                obj = obj.filter(pci_slots=pci_number)
-            for brand_object in obj:
-                products_list.append(brand_object.name)
         return products_list
     except ObjectDoesNotExist:
         return None

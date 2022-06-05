@@ -34,7 +34,6 @@ class Brand_mining(models.Model):
 class Motherboard(models.Model):
     pci_slots = models.IntegerField(verbose_name="Количество слотов pci-express")  # number of slots for videocards
     socket_type = models.CharField(verbose_name="Тип сокета", max_length=64)  # CPU: socket type
-    # pci_express = models.CharField(verbose_name="Версия pci-express", max_length=64)  # GPU: pci-express version
     pci_express = MultiSelectField(verbose_name="Версии pci-express", choices=pci_express_choices)
     ram_type = models.CharField(verbose_name="Тип памяти", max_length=64, choices=ram_type_choices)
     category = models.ForeignKey(Category_mining, verbose_name="Категория", on_delete=models.CASCADE)
@@ -54,8 +53,7 @@ class Motherboard(models.Model):
 
 
 class CPU(models.Model):
-    # motherboard = models.ManyToManyField(Motherboard, verbose_name="Поддерживаемые материнские платы")
-    socket_type = models.ManyToManyField(Motherboard, verbose_name="Тип сокета")
+    socket_type = models.ManyToManyField(Motherboard, verbose_name="Поддерживаемые материнские платы")
     category = models.ForeignKey(Category_mining, verbose_name="Категория", on_delete=models.CASCADE)
     brand = models.ForeignKey(Brand_mining, verbose_name="Бренд", on_delete=models.CASCADE)
     image = models.ImageField(verbose_name="Фото")
@@ -72,9 +70,7 @@ class CPU(models.Model):
 
 
 class GPU(models.Model):
-    # motherboard = models.ManyToManyField(Motherboard, verbose_name="Поддерживаемые материнские платы")
-    pci_express = models.ManyToManyField(Motherboard, verbose_name="Версии pci-express", max_length=64)
-    # pci_express = MultiSelectField(choices=pci_express_choices)
+    pci_express = models.ManyToManyField(Motherboard, verbose_name="Поддерживаемые материнские платы", max_length=64)
     category = models.ForeignKey(Category_mining, verbose_name="Категория", on_delete=models.CASCADE)
     brand = models.ForeignKey(Brand_mining, verbose_name="Бренд", on_delete=models.CASCADE)
     image = models.ImageField(verbose_name="Фото")
@@ -91,7 +87,6 @@ class GPU(models.Model):
 
 
 class SSD(models.Model):
-    # motherboard = models.ManyToManyField(Motherboard, verbose_name="Поддерживаемые материнские платы")
     category = models.ForeignKey(Category_mining, verbose_name="Категория", on_delete=models.CASCADE)
     brand = models.ForeignKey(Brand_mining, verbose_name="Бренд", on_delete=models.CASCADE)
     image = models.ImageField(verbose_name="Фото")
@@ -108,8 +103,7 @@ class SSD(models.Model):
 
 
 class RAM(models.Model):
-    # motherboard = models.ManyToManyField(Motherboard, verbose_name="Поддерживаемые материнские платы")
-    ram_type = models.ManyToManyField(Motherboard, verbose_name="Тип памяти")
+    ram_type = models.ManyToManyField(Motherboard, verbose_name="Поддерживаемые материнские платы")
     category = models.ForeignKey(Category_mining, verbose_name="Категория", on_delete=models.CASCADE)
     brand = models.ForeignKey(Brand_mining, verbose_name="Бренд", on_delete=models.CASCADE)
     image = models.ImageField(verbose_name="Фото")
@@ -126,8 +120,7 @@ class RAM(models.Model):
 
 
 class Cooler(models.Model):
-    # motherboard = models.ManyToManyField(Motherboard, verbose_name="Поддерживаемые материнские платы")
-    socket_type = models.ManyToManyField(Motherboard, verbose_name="Тип сокета")
+    socket_type = models.ManyToManyField(Motherboard, verbose_name="Поддерживаемые материнские платы")
     category = models.ForeignKey(Category_mining, verbose_name="Категория", on_delete=models.CASCADE)
     brand = models.ForeignKey(Brand_mining, verbose_name="Бренд", on_delete=models.CASCADE)
     image = models.ImageField(verbose_name="Фото")
@@ -144,7 +137,6 @@ class Cooler(models.Model):
 
 
 class PowerUnit(models.Model):
-    # motherboard = models.ManyToManyField(Motherboard, verbose_name="Поддерживаемые материнские платы")
     category = models.ForeignKey(Category_mining, verbose_name="Категория", on_delete=models.CASCADE)
     brand = models.ForeignKey(Brand_mining, verbose_name="Бренд", on_delete=models.CASCADE)
     image = models.ImageField(verbose_name="Фото")

@@ -115,12 +115,22 @@ async def subcategory_brands(callback, subcategory_name):
     chat_id = callback.message.chat.id
     text = "Выберите :"
     brand_buttons = InlineKeyboardMarkup(row_width=3)
-    brands_list = await utils.get_need_subcategory_brands(callback=subcategory_name)
 
     if callback.data != "prev":
         product_path = f"subcategories={subcategory_name}/"
         data = await Data(user_id=chat_id, path=product_path)
         data.create_path()
+
+    product_path = ""
+    json_path = await Data(user_id=chat_id, path=product_path)
+    path = json_path.get_path()
+    print(type(path), "Current path : ", path)
+    last_room = path.split(sep='/')[-2]
+    prev_room = path.split(sep='/')[-3]
+    print("Last room in path : ", last_room)
+    print("Prev room in path : ", prev_room)
+    category_name = prev_room.split(sep='=')[-1]
+    brands_list = await utils.get_need_subcategory_brands(category=category_name, sub_category=subcategory_name)
 
     for brand in brands_list:
         button = InlineKeyboardButton(brand, callback_data=brand)
@@ -136,9 +146,6 @@ async def brand_products(callback, brand_name):
     chat_id = callback.message.chat.id
     text = "Выберите :"
     product_buttons = InlineKeyboardMarkup(row_width=2)
-    products_list = await utils.get_need_brand_products(callback=brand_name)
-
-    items_amount = len(products_list)
 
     if callback.data == "prev" or callback.data.startswith("prev_page") or callback.data.startswith("next_page"):
         pass
@@ -146,6 +153,31 @@ async def brand_products(callback, brand_name):
         product_path = f"brands={brand_name}/"
         data = await Data(user_id=chat_id, path=product_path)
         data.create_path()
+
+    product_path = ""
+    json_path = await Data(user_id=chat_id, path=product_path)
+    path = json_path.get_path()
+    print(type(path), "Current path : ", path)
+    last_room = path.split(sep='/')[-2]
+    prev_room = path.split(sep='/')[-3]
+    pre_prev_room = path.split(sep='/')[-4]
+    print("Last room in path : ", last_room)
+    print("Prev room in path : ", prev_room)
+    print("Pre_Prev room in path : ", pre_prev_room)
+    category_name = pre_prev_room.split(sep='=')[-1]
+    subcategory_name = prev_room.split(sep='=')[-1]
+    products_list = ""
+
+    if "subcategories" in prev_room:
+        products_list = await utils.get_need_brand_products(category=category_name, sub_category=subcategory_name,
+                                                            brand_name=brand_name)
+    elif "categories" in prev_room:
+        category_name = prev_room.split(sep='=')[-1]
+        subcategory_name = ""
+        products_list = await utils.get_need_brand_products(category=category_name, sub_category=subcategory_name,
+                                                            brand_name=brand_name)
+
+    items_amount = len(products_list)
 
     if any(map(str.isdigit, callback.data)) and "|" in callback.data:
         page_items = int(callback.data.split(sep='|')[1])
@@ -233,10 +265,8 @@ async def get_mining_products(callback, brand_name, pci_number, state):
     current_state = await state.get_state()
     text = "Выберите :"
     product_buttons = InlineKeyboardMarkup(row_width=2)
-    products_list = await utils.get_mining_products(pci_number=pci_number, brand_name=brand_name, current_state=current_state)
-
+    products_list = await utils.get_mining_products(callback=callback, pci_number=pci_number, brand_name=brand_name, current_state=current_state)
     items_amount = len(products_list)
-
     if any(map(str.isdigit, callback.data)) and "|" in callback.data:
         page_items = int(callback.data.split(sep='|')[1])
         if page_items < items_amount:
@@ -275,7 +305,7 @@ async def get_mining_products(callback, brand_name, pci_number, state):
                     break
 
     prev = InlineKeyboardButton("Назад  ↩️", callback_data="prev|to_get_mining_brands")
-    home = InlineKeyboardButton("Главное меню  🏠", callback_data="home")
+    home = InlineKeyboardButton("Главное меню  🏠", callback_data="cancel_building|home")
     product_buttons.row(home, prev)
     await bot.send_message(chat_id=chat_id, text=text, reply_markup=product_buttons)
     async with state.proxy() as data:

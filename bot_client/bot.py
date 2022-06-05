@@ -108,7 +108,7 @@ async def choose_motherboard(callback: types.CallbackQuery, state: FSMContext):
     chat_id = callback.message.chat.id
     current_state = await state.get_state()
     brands_list = await utils.get_mining_brands(callback=callback, current_state=current_state)
-    products_list = await utils.get_mining_products(pci_number="", brand_name="", current_state=current_state)
+    products_list = await utils.get_mining_products(callback=callback, pci_number="", brand_name="", current_state=current_state)
     print("This is choosing motherboard state")
     if callback.data == "choose_motherboard":
         await callback.message.delete()
@@ -128,6 +128,24 @@ async def choose_motherboard(callback: types.CallbackQuery, state: FSMContext):
     elif callback.data in products_list:
         await callback.message.delete()
         await mining_product_info(callback=callback, state=state)
+
+    elif callback.data.startswith("next_page"):
+        print("nexttt")
+        await callback.message.delete()
+        brand_name = callback.data.split(sep='|')[-1]
+        async with state.proxy() as data:
+            await keyboards.get_mining_products(callback=callback, brand_name=brand_name,
+                                                pci_number=data['pci_number'], state=state)
+        await callback.answer()
+
+    elif callback.data.startswith("prev_page"):
+        print("prevvv")
+        await callback.message.delete()
+        brand_name = callback.data.split(sep='|')[-1]
+        async with state.proxy() as data:
+            await keyboards.get_mining_products(callback=callback, brand_name=brand_name,
+                                                pci_number=data['pci_number'], state=state)
+        await callback.answer()
 
     elif callback.data.startswith('collect'):
         await callback.message.delete()
@@ -163,7 +181,7 @@ async def choose_cpu(callback: types.CallbackQuery, state: FSMContext):
     chat_id = callback.message.chat.id
     current_state = await state.get_state()
     brands_list = await utils.get_mining_brands(callback=callback, current_state=current_state)
-    products_list = await utils.get_mining_products(pci_number="", brand_name="", current_state=current_state)
+    products_list = await utils.get_mining_products(callback=callback, pci_number="", brand_name="", current_state=current_state)
     if callback.data == "choose_cpu":
         await callback.message.delete()
         await keyboards.get_mining_brands(callback=callback, state=state)
@@ -176,6 +194,24 @@ async def choose_cpu(callback: types.CallbackQuery, state: FSMContext):
     elif callback.data in products_list:
         await callback.message.delete()
         await mining_product_info(callback=callback, state=state)
+
+    elif callback.data.startswith("next_page"):
+        print("nexttt")
+        await callback.message.delete()
+        brand_name = callback.data.split(sep='|')[-1]
+        async with state.proxy() as data:
+            await keyboards.get_mining_products(callback=callback, brand_name=brand_name,
+                                                pci_number=data['pci_number'], state=state)
+        await callback.answer()
+
+    elif callback.data.startswith("prev_page"):
+        print("prevvv")
+        await callback.message.delete()
+        brand_name = callback.data.split(sep='|')[-1]
+        async with state.proxy() as data:
+            await keyboards.get_mining_products(callback=callback, brand_name=brand_name,
+                                                pci_number=data['pci_number'], state=state)
+        await callback.answer()
 
     elif callback.data.startswith('collect'):
         await callback.message.delete()
@@ -208,7 +244,7 @@ async def choose_gpu(callback: types.CallbackQuery, state: FSMContext):
     chat_id = callback.message.chat.id
     current_state = await state.get_state()
     brands_list = await utils.get_mining_brands(callback=callback, current_state=current_state)
-    products_list = await utils.get_mining_products(pci_number="", brand_name="", current_state=current_state)
+    products_list = await utils.get_mining_products(callback=callback, pci_number="", brand_name="", current_state=current_state)
     if callback.data == "choose_gpu":
         await callback.message.delete()
         await keyboards.get_mining_brands(callback=callback, state=state)
@@ -221,6 +257,24 @@ async def choose_gpu(callback: types.CallbackQuery, state: FSMContext):
     elif callback.data in products_list:
         await callback.message.delete()
         await mining_product_info(callback=callback, state=state)
+
+    elif callback.data.startswith("next_page"):
+        print("nexttt")
+        await callback.message.delete()
+        brand_name = callback.data.split(sep='|')[-1]
+        async with state.proxy() as data:
+            await keyboards.get_mining_products(callback=callback, brand_name=brand_name,
+                                                pci_number=data['pci_number'], state=state)
+        await callback.answer()
+
+    elif callback.data.startswith("prev_page"):
+        print("prevvv")
+        await callback.message.delete()
+        brand_name = callback.data.split(sep='|')[-1]
+        async with state.proxy() as data:
+            await keyboards.get_mining_products(callback=callback, brand_name=brand_name,
+                                                pci_number=data['pci_number'], state=state)
+        await callback.answer()
 
     elif callback.data.startswith('collect'):
         await callback.message.delete()
@@ -253,7 +307,7 @@ async def choose_ssd(callback: types.CallbackQuery, state: FSMContext):
     chat_id = callback.message.chat.id
     current_state = await state.get_state()
     brands_list = await utils.get_mining_brands(callback=callback, current_state=current_state)
-    products_list = await utils.get_mining_products(pci_number="", brand_name="", current_state=current_state)
+    products_list = await utils.get_mining_products(callback=callback, pci_number="", brand_name="", current_state=current_state)
     if callback.data == "choose_ssd":
         await callback.message.delete()
         await keyboards.get_mining_brands(callback=callback, state=state)
@@ -266,6 +320,24 @@ async def choose_ssd(callback: types.CallbackQuery, state: FSMContext):
     elif callback.data in products_list:
         await callback.message.delete()
         await mining_product_info(callback=callback, state=state)
+
+    elif callback.data.startswith("next_page"):
+        print("nexttt")
+        await callback.message.delete()
+        brand_name = callback.data.split(sep='|')[-1]
+        async with state.proxy() as data:
+            await keyboards.get_mining_products(callback=callback, brand_name=brand_name,
+                                                pci_number=data['pci_number'], state=state)
+        await callback.answer()
+
+    elif callback.data.startswith("prev_page"):
+        print("prevvv")
+        await callback.message.delete()
+        brand_name = callback.data.split(sep='|')[-1]
+        async with state.proxy() as data:
+            await keyboards.get_mining_products(callback=callback, brand_name=brand_name,
+                                                pci_number=data['pci_number'], state=state)
+        await callback.answer()
 
     elif callback.data.startswith('collect'):
         await callback.message.delete()
@@ -298,7 +370,7 @@ async def choose_ram(callback: types.CallbackQuery, state: FSMContext):
     chat_id = callback.message.chat.id
     current_state = await state.get_state()
     brands_list = await utils.get_mining_brands(callback=callback, current_state=current_state)
-    products_list = await utils.get_mining_products(pci_number="", brand_name="", current_state=current_state)
+    products_list = await utils.get_mining_products(callback=callback, pci_number="", brand_name="", current_state=current_state)
     if callback.data == "choose_ram":
         await callback.message.delete()
         await keyboards.get_mining_brands(callback=callback, state=state)
@@ -311,6 +383,24 @@ async def choose_ram(callback: types.CallbackQuery, state: FSMContext):
     elif callback.data in products_list:
         await callback.message.delete()
         await mining_product_info(callback=callback, state=state)
+
+    elif callback.data.startswith("next_page"):
+        print("nexttt")
+        await callback.message.delete()
+        brand_name = callback.data.split(sep='|')[-1]
+        async with state.proxy() as data:
+            await keyboards.get_mining_products(callback=callback, brand_name=brand_name,
+                                                pci_number=data['pci_number'], state=state)
+        await callback.answer()
+
+    elif callback.data.startswith("prev_page"):
+        print("prevvv")
+        await callback.message.delete()
+        brand_name = callback.data.split(sep='|')[-1]
+        async with state.proxy() as data:
+            await keyboards.get_mining_products(callback=callback, brand_name=brand_name,
+                                                pci_number=data['pci_number'], state=state)
+        await callback.answer()
 
     elif callback.data.startswith('collect'):
         await callback.message.delete()
@@ -343,7 +433,7 @@ async def choose_cooler(callback: types.CallbackQuery, state: FSMContext):
     chat_id = callback.message.chat.id
     current_state = await state.get_state()
     brands_list = await utils.get_mining_brands(callback=callback, current_state=current_state)
-    products_list = await utils.get_mining_products(pci_number="", brand_name="", current_state=current_state)
+    products_list = await utils.get_mining_products(callback=callback, pci_number="", brand_name="", current_state=current_state)
     if callback.data == "choose_cooler":
         await callback.message.delete()
         await keyboards.get_mining_brands(callback=callback, state=state)
@@ -356,6 +446,24 @@ async def choose_cooler(callback: types.CallbackQuery, state: FSMContext):
     elif callback.data in products_list:
         await callback.message.delete()
         await mining_product_info(callback=callback, state=state)
+
+    elif callback.data.startswith("next_page"):
+        print("nexttt")
+        await callback.message.delete()
+        brand_name = callback.data.split(sep='|')[-1]
+        async with state.proxy() as data:
+            await keyboards.get_mining_products(callback=callback, brand_name=brand_name,
+                                                pci_number=data['pci_number'], state=state)
+        await callback.answer()
+
+    elif callback.data.startswith("prev_page"):
+        print("prevvv")
+        await callback.message.delete()
+        brand_name = callback.data.split(sep='|')[-1]
+        async with state.proxy() as data:
+            await keyboards.get_mining_products(callback=callback, brand_name=brand_name,
+                                                pci_number=data['pci_number'], state=state)
+        await callback.answer()
 
     elif callback.data.startswith('collect'):
         await callback.message.delete()
@@ -388,7 +496,7 @@ async def choose_power_unit(callback: types.CallbackQuery, state: FSMContext):
     chat_id = callback.message.chat.id
     current_state = await state.get_state()
     brands_list = await utils.get_mining_brands(callback=callback, current_state=current_state)
-    products_list = await utils.get_mining_products(pci_number="", brand_name="", current_state=current_state)
+    products_list = await utils.get_mining_products(callback=callback, pci_number="", brand_name="", current_state=current_state)
     if callback.data == "choose_power_unit":
         await callback.message.delete()
         await keyboards.get_mining_brands(callback=callback, state=state)
@@ -401,6 +509,24 @@ async def choose_power_unit(callback: types.CallbackQuery, state: FSMContext):
     elif callback.data in products_list:
         await callback.message.delete()
         await mining_product_info(callback=callback, state=state)
+
+    elif callback.data.startswith("next_page"):
+        print("nexttt")
+        await callback.message.delete()
+        brand_name = callback.data.split(sep='|')[-1]
+        async with state.proxy() as data:
+            await keyboards.get_mining_products(callback=callback, brand_name=brand_name,
+                                                pci_number=data['pci_number'], state=state)
+        await callback.answer()
+
+    elif callback.data.startswith("prev_page"):
+        print("prevvv")
+        await callback.message.delete()
+        brand_name = callback.data.split(sep='|')[-1]
+        async with state.proxy() as data:
+            await keyboards.get_mining_products(callback=callback, brand_name=brand_name,
+                                                pci_number=data['pci_number'], state=state)
+        await callback.answer()
 
     elif callback.data.startswith('collect'):
         await callback.message.delete()
@@ -583,18 +709,21 @@ async def command_response(callback: types.CallbackQuery, state: FSMContext):
         await callback.answer()
 
     elif callback.data in categories_list:
+        print("Showed category_content")
         await callback.message.delete()
         category_name = callback.data
         await keyboards.subcategories_or_brands(callback=callback, category_name=category_name)
         await callback.answer()
 
     elif callback.data in subcategories_list:
+        print("Showed subcategory_content")
         await callback.message.delete()
         brand_name = callback.data
         await keyboards.subcategory_brands(callback=callback, subcategory_name=brand_name)
         await callback.answer()
 
     elif callback.data in brands_list:
+        print("Showed brand_content")
         await callback.message.delete()
         brand_name = callback.data
         await keyboards.brand_products(callback=callback, brand_name=brand_name)
